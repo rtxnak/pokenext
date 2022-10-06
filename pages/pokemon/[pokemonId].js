@@ -1,15 +1,11 @@
 import styles from '../../styles/Pokemon.module.css'
-import { fetchAllPokemonsApi } from '../../fetchApi'
+import { fetchAllPokemons, fetchPokemonById } from '../../fetchApi'
 
 import Image from 'next/image'
 
 export const getStaticPaths = async () => {
-  const maxPokemons = 151
-  const api = `https://pokeapi.co/api/v2/pokemon/`
 
-  const res = await fetch(`${api}/?limit=${maxPokemons}`)
-
-  const data = await res.json()
+  const data = await fetchAllPokemons()
 
   const paths = data.results.map((pokemon, index) => {
     return {
@@ -24,11 +20,8 @@ export const getStaticPaths = async () => {
 }
 
 export const getStaticProps = async (context) => {
-  const id = context.params.pokemonId
 
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
-
-  const data = await res.json()
+  const data = await fetchPokemonById(context)
 
   return {
     props: { pokemon: data },
